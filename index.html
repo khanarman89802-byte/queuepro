@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>QueuePro SaaS</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: white;
+    }
+
+    .container {
+      padding: 20px;
+    }
+
+    .card {
+      background: #1e293b;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 6px;
+      border: none;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      background: #3b82f6;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background: #2563eb;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="card" id="loginBox">
+    <h2>Clinic Admin Login</h2>
+    <input type="text" placeholder="Email">
+    <input type="password" placeholder="Password">
+    <button onclick="showDashboard()">Login</button>
+  </div>
+
+  <div class="card hidden" id="dashboard">
+    <h2>Queue Dashboard</h2>
+    <h3>Current Token: <span id="token">1</span></h3>
+    <button onclick="nextToken()">Next Token</button>
+    <button onclick="resetToken()">Reset</button>
+  </div>
+
+</div>
+
+<script>
+let token = 1;
+
+function showDashboard() {
+  document.getElementById("loginBox").classList.add("hidden");
+  document.getElementById("dashboard").classList.remove("hidden");
+}
+
+function nextToken() {
+  token++;
+  document.getElementById("token").innerText = token;
+}
+
+function resetToken() {
+  token = 1;
+  document.getElementById("token").innerText = token;
+}
+</script>
+
+</body>
+      </html>
