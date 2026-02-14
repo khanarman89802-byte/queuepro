@@ -1,106 +1,250 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>QueuePro SaaS</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Success Diary - QueuePro</title>
+    <style>
+        :root {
+            --primary: #3b82f6; /* Blue */
+            --bg: #0f172a;      /* Dark Blue Bg */
+            --card: #1e293b;    /* Card Bg */
+            --text: #ffffff;
+        }
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #0f172a;
-      color: white;
-    }
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
 
-    .container {
-      padding: 20px;
-    }
+        .container {
+            width: 100%;
+            max-width: 420px;
+            padding: 20px;
+        }
 
-    .card {
-      background: #1e293b;
-      padding: 20px;
-      border-radius: 12px;
-      margin-bottom: 20px;
-    }
+        /* Card Design */
+        .glass-card {
+            background: rgba(30, 41, 59, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            animation: fadeIn 0.5s ease-in-out;
+        }
 
-    input {
-      width: 100%;
-      padding: 10px;
-      margin: 8px 0;
-      border-radius: 6px;
-      border: none;
-    }
+        h1 { margin: 0 0 10px 0; font-size: 24px; color: var(--primary); }
+        p { color: #94a3b8; margin-bottom: 25px; }
 
-    button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-      background: #3b82f6;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      font-size: 16px;
-    }
+        /* Input Fields */
+        input {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border: 1px solid #334155;
+            background: #0f172a;
+            color: white;
+            box-sizing: border-box; /* Fix padding issue */
+            font-size: 16px;
+            transition: 0.3s;
+        }
 
-    button:hover {
-      background: #2563eb;
-    }
+        input:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
 
-    .hidden {
-      display: none;
-    }
-  </style>
+        /* Buttons */
+        .btn {
+            width: 100%;
+            padding: 15px;
+            margin-top: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-danger { background: #ef4444; color: white; margin-top: 10px; }
+        .btn:active { transform: scale(0.98); }
+
+        /* Token Display */
+        .token-display {
+            font-size: 80px;
+            font-weight: bold;
+            color: var(--primary);
+            margin: 20px 0;
+            text-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+        }
+
+        /* History List */
+        .history-log {
+            margin-top: 20px;
+            text-align: left;
+            max-height: 150px;
+            overflow-y: auto;
+            font-size: 14px;
+            color: #94a3b8;
+            border-top: 1px solid #334155;
+            padding-top: 10px;
+        }
+        .history-item { padding: 5px 0; border-bottom: 1px solid #334155; }
+
+        .hidden { display: none; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </head>
-
 <body>
 
 <div class="container">
 
-  <div class="card" id="loginBox">
-    <h2>Clinic Admin Login</h2>
-    <input type="text" placeholder="Email">
-    <input type="password" placeholder="Password">
-    <button onclick="showDashboard()">Login</button>
-  </div>
+    <div id="login-screen" class="glass-card">
+        <h1>🔐 Success Diary</h1>
+        <p>Login to Manage Queue</p>
+        <input type="email" id="email" placeholder="Enter Email">
+        <input type="password" id="password" placeholder="Enter Password">
+        <button class="btn btn-primary" onclick="handleLogin()">Login</button>
+    </div>
 
-  <div class="card hidden" id="dashboard">
-    <h2>Queue Dashboard</h2>
-    <h3>Current Token: <span id="token">1</span></h3>
-    <button onclick="nextToken()">Next Token</button>
-    <button onclick="resetToken()">Reset</button>
-  </div>
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+    <div id="dashboard-screen" class="glass-card hidden">
+        <h1>📢 Counter 1</h1>
+        <p>Current Token Number</p>
+        
+        <div class="token-display" id="token-number">0</div>
+        
+        <button class="btn btn-primary" onclick="updateToken(1)">🔔 Next Token</button>
+        <button class="btn btn-danger" onclick="updateToken(0)">Reset Queue</button>
 
-// Your web app's Firebase configuration
-const firebaseConfig = {// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+        <div class="history-log">
+            <strong>History:</strong>
+            <div id="history-list"></div>
+        </div>
+    </div>
+
 </div>
 
+<script type="module">
+    // 1. Firebase Imports (Standard CDN links)
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+    import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+
+    // 2. YOUR FIREBASE CONFIGURATION
+    // Bhai yahan dhyan se apni details bharna.
+    // Quotes "" ke andar sahi se paste karna.
+    const firebaseConfig = {
+        apiKey: "YAHAN_API_KEY_PASTE_KARO",
+        authDomain: "queuepro-XXXX.firebaseapp.com",
+        databaseURL: "https://queuepro-XXXX-default-rtdb.firebaseio.com",
+        projectId: "queuepro-XXXX",
+        storageBucket: "queuepro-XXXX.appspot.com",
+        messagingSenderId: "YOUR_SENDER_ID",
+        appId: "YOUR_APP_ID"
+    };
+
+    // 3. Initialize Firebase
+    // Try-Catch block taaki agar config galat ho toh bhi App band na ho
+    let db;
+    try {
+        const app = initializeApp(firebaseConfig);
+        db = getDatabase(app);
+        console.log("Firebase Connected Successfully!");
+        
+        // Listen for changes (Real-time update)
+        const tokenRef = ref(db, 'currentToken');
+        onValue(tokenRef, (snapshot) => {
+            const data = snapshot.val();
+            if (data !== null) {
+                updateDisplay(data);
+            }
+        });
+    } catch (error) {
+        console.log("Firebase config missing or incorrect. Running in Offline Mode.");
+    }
+
+    // Global Functions ko window object mein dalna padega module hone ki wajah se
+    window.db = db;
+    window.ref = ref;
+    window.set = set;
+</script>
+
 <script>
-let token = 1;
+    let currentToken = 0;
+    
+    // Login Function
+    function handleLogin() {
+        // Filhal bina password ke login (Testing ke liye)
+        document.getElementById('login-screen').classList.add('hidden');
+        document.getElementById('dashboard-screen').classList.remove('hidden');
+        playSound();
+    }
 
-function showDashboard() {
-  document.getElementById("loginBox").classList.add("hidden");
-  document.getElementById("dashboard").classList.remove("hidden");
-}
+    // Token Update Function
+    function updateToken(action) {
+        if (action === 1) {
+            currentToken++;
+        } else {
+            currentToken = 0;
+        }
 
-function nextToken() {
-  token++;
-  document.getElementById("token").innerText = token;
-}
+        // 1. Update Screen
+        updateDisplay(currentToken);
+        
+        // 2. Play Sound
+        if(action === 1) playSound();
 
-function resetToken() {
-  token = 1;
-  document.getElementById("token").innerText = token;
-}
+        // 3. Add to History
+        addToHistory(currentToken);
+
+        // 4. Update Firebase (Agar connected hai toh)
+        if (window.db) {
+            window.set(window.ref(window.db, 'currentToken'), currentToken);
+        }
+    }
+
+    function updateDisplay(num) {
+        currentToken = num;
+        document.getElementById('token-number').innerText = num;
+        
+        // Animation effect
+        const display = document.getElementById('token-number');
+        display.style.transform = "scale(1.2)";
+        setTimeout(() => display.style.transform = "scale(1)", 200);
+    }
+
+    function playSound() {
+        // Simple 'Ding' sound
+        const audio = new Audio('https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg');
+        audio.volume = 0.5;
+        audio.play().catch(e => console.log("Audio play failed"));
+    }
+
+    function addToHistory(token) {
+        if(token === 0) return;
+        const list = document.getElementById('history-list');
+        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const item = document.createElement('div');
+        item.className = 'history-item';
+        item.innerText = `Token #${token} - ${time}`;
+        list.prepend(item); // Newest on top
+    }
 </script>
 
 </body>
 </html>
-
-  
-};
 
